@@ -1,0 +1,11 @@
+
+How to use nodemon
+1) Install nodemon by using npm install nodemon.
+2) Go to package.json file add new command 
+    "dev": "nodemon server.js"
+3) Run "npm run devStart";
+
+If find any issues regarding the port use below command 
+sudo lsof -i :3000
+sudo kill -9 <ID>
+
