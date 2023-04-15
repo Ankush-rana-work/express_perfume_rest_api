@@ -1,4 +1,4 @@
-const { UserModel,sequelize } = require("../../models");
+const { UserModel, RoleModel, sequelize } = require("../../models");
 const {
   sendError,
   sendSucess,
@@ -8,6 +8,7 @@ const {
 const JwtHelper = require("../../utils/jwtHelper");
 const bcrypt = require("bcryptjs");
 const CustomExceptionService = require("../../customExceptionHandler");
+const { STATUS_CODE } = require('../../config/constant');
 
 const UserService = {
   register: async (req) => {
@@ -15,20 +16,24 @@ const UserService = {
       try {
         const users = await UserModel.findOne({
           where: {
-            email: req.body.email,
+            email: req.email,
           },
         });
 
         if (users) {
-          throw new CustomExceptionService(400, "Email already exist");
+          throw new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, "Email already exist");
         }
-
+        
+        const role = await RoleModel.findOne({where:{ slug: req.type }});
+        if(!role) reject(new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, 'Invalid role' ))
+       
         // creating new user along with hashed password
         let user = await UserModel.create({
-          firstname: req.body.firstname,
-          email: req.body.email,
-          lastname: req.body.lastname,
-          password: await generateHash(req.body.password),
+          firstname: req.firstname,
+          email: req.email,
+          lastname: req.lastname,
+          password: await generateHash(req.password),
+          role_id:role.id
         });
 
         // generating token
@@ -53,15 +58,29 @@ const UserService = {
         // checking user exist in our database
         let user = await UserModel.findOne({ 
           where: { email: input.email },
+          attributes: { 
+            exclude: ['createdAt', 'updatedAt','is_delete','password','role_id'],
+            include: [
+                [sequelize.literal('password'), 'password']
+            ]
+          },
+          include: [{
+              model: RoleModel,
+              as: 'user_role', // specify the alias as 'productMedia'
+              attributes: { 
+                  exclude: ['createdAt', 'updatedAt'],
+              }    
+          }],
         });
+
         if (!user) {
-          throw new CustomExceptionService(400, "User is not exist");
+          throw new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, "User is not exist");
         }
 
         // comparing password with exisitng has password for user
         const isPaswordValid = await hashCompare(input.password, user.password);
         if (!isPaswordValid) {
-          throw new CustomExceptionService(400, "Invalid username and password" );
+          throw new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, "Invalid username and password" );
         }
 
         // generating token
@@ -89,10 +108,26 @@ const UserService = {
           throw new CustomExceptionService(400, "Invalid token" );
         }
 
-        let user = await UserModel.findOne({ where: { id: payload.user_id, is_active: 1, is_delete : 0 } });
+        let user = await UserModel.findOne({ 
+          where: { id: payload.user_id, is_active: 1, is_delete : 0 },
+          attributes: { 
+            exclude: ['createdAt', 'updatedAt','is_delete', 'password', 'role_id'],
+            include: [
+                [sequelize.literal('password'), 'password']
+            ]
+          },
+          include: [{
+              model: RoleModel,
+              as: 'user_role', // specify the alias as 'productMedia'
+              attributes: { 
+                  exclude: ['createdAt', 'updatedAt'],
+              }    
+          }],
+        });
+
 
         if( !user ){
-          throw new CustomExceptionService(400, "Invalid user" );
+          throw new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, "Invalid user" );
         }
 
         // generating token

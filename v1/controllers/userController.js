@@ -7,7 +7,7 @@ const UserController = {
   /**
  * @swagger
  * tags:
- *   name: user
+ *   name: User
  *   description: The user managing API
  * /v1/user/register:
  *   post:
@@ -26,11 +26,16 @@ const UserController = {
 *                   email:
 *                       type: string
 *                       description: User email.
-*                       example: "ankush0094@gmail.com"
+*                       example: "xyz@gmail.com"
 *                   password:
 *                       type: string,
 *                       description: User password,
-*                       example: "ank@123456"
+*                       example: "xyz@123456"
+*                   type:
+*                       type: string,
+*                       description: User password,
+*                       example: "user"
+*                       enum: [admin, user]
 *     responses:
 *       '200' :
 *         description: success
@@ -42,7 +47,7 @@ const UserController = {
  */
   register: async (req, res, next) => {
     try {
-      const user = await UserService.register(req);
+      const user = await UserService.register(req.body);
       sendSucess(res, 200, Message.USER_LIST, user);
     } catch (error) {
       next(error);
@@ -51,7 +56,7 @@ const UserController = {
   /**
  * @swagger
  * tags:
- *   name: user
+ *   name: User
  *   description: The user managing API
  * /v1/user/login:
  *   get:
@@ -63,13 +68,13 @@ const UserController = {
  *         schema:
  *           type: string
  *           description: User email.
- *           example: "ankush0094@gmail.com"
+ *           example: "xyz@gmail.com"
  *       - in: query
  *         name: password
  *         schema:
  *           type: string
  *           description: User password.
- *           example: "ank@123456"
+ *           example: "xyz@123456"
  *     responses:
  *       '200' :
  *         description: success
@@ -90,7 +95,7 @@ const UserController = {
   /**
  * @swagger
  * tags:
- *   name: user
+ *   name: User
  *   description: The user managing API
  * /v1/user/refresh-token:
  *   post:

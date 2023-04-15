@@ -99,7 +99,7 @@ const ProductService = {
                     },
                     include: [{
                         model: MediaModel,
-                        as: 'productMedia', // specify the alias as 'productMedia'
+                        as: 'product_media', // specify the alias as 'productMedia'
                         attributes: { 
                             exclude: ['createdAt', 'updatedAt'],
                         }    

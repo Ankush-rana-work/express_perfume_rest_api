@@ -23,6 +23,11 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING(255),
         allowNull: false
       },
+      role_id: {
+        type: Sequelize.TINYINT,
+        allowNull: true,
+        defaultValue: 1,
+      },
       is_active: {
         type: Sequelize.TINYINT,
         allowNull: false,

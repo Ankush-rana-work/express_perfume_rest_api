@@ -25,7 +25,7 @@ const ProductSchema = {
     },
     attributes: (req, res, next)=>{
         const schema = Joi.object().keys({
-            "type": Joi.string().required(),
+            "type": Joi.string().valid('brand', 'volume', 'shop_for', 'formulation').required(),
             "per_page": Joi.number().min(1),
             "page_no": Joi.number().min(1),
         });

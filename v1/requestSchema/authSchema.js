@@ -8,6 +8,7 @@ const AuthSchema = {
       email: Joi.string().email().max(100).required(),
       lastname: Joi.string().max(50),
       password: Joi.string().max(100).required(),
+      type: Joi.string().valid('admin', 'user').required(),
     });
 
     JoiHelper.validate(schema, req.body, res, next);

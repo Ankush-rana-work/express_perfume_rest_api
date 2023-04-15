@@ -26,7 +26,9 @@ db.AttributeModel = require("./attributeModel")(sequelize, Sequelize);
 db.AttributeDataModel = require("./attributeDataModel")(sequelize, Sequelize);
 
 //relationships
-db.ProductModel.hasMany(db.MediaModel,{ as: 'productMedia', foreignKey: 'table_id' });
-db.MediaModel.belongsTo(db.ProductModel, { as: 'mediaProduct', foreignKey: 'table_id' });
+db.UserModel.belongsTo(db.RoleModel, {as: 'user_role', foreignKey: 'role_id'});
+db.ProductModel.hasMany(db.MediaModel,{ as: 'product_media', foreignKey: 'table_id' });
+db.MediaModel.belongsTo(db.ProductModel, { as: 'media_product', foreignKey: 'table_id' });
+
 
 module.exports = db;
