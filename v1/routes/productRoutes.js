@@ -5,7 +5,8 @@ const ProductSchema = require('../requestSchema/productSchema');
 
 router.post('/create', auth, ProductSchema.createEdit, ProductController.create);
 router.put('/edit/:id', auth, ProductSchema.createEdit, ProductController.edit);
-router.get('/show', auth, ProductSchema.show, ProductController.show); 
+router.get('/show', auth, ProductSchema.show, ProductController.show);
+router.get('/attributes', ProductSchema.attributes, ProductController.getAttributes ) 
 
 
 module.exports = router;

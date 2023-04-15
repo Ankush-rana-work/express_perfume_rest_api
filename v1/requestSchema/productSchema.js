@@ -22,7 +22,16 @@ const ProductSchema = {
             "search": Joi.string().allow('').optional()
         });
         JoiHelper.validate(schema, req.body, res, next);
-    } 
+    },
+    attributes: (req, res, next)=>{
+        const schema = Joi.object().keys({
+            "type": Joi.string().required(),
+            "per_page": Joi.number().min(1),
+            "page_no": Joi.number().min(1),
+        });
+        
+        JoiHelper.validate(schema, req.query, res, next);
+    }
 }
 
 module.exports = ProductSchema;

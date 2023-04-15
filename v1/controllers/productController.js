@@ -141,6 +141,14 @@ const ProductController = {
             next(error);
         }
     },
+    getAttributes: async (req, res, next)=>{
+        try{
+            const attribute_list = await ProductService.getAttributesList(req.query);
+            sendSucess(res, 200, Message.PRODUCT_LIST, attribute_list);
+        }catch(error){
+            next(error);
+        }
+    }
 }
 
 module.exports = ProductController

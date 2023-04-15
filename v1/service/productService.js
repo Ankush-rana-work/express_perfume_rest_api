@@ -1,4 +1,4 @@
-const { ProductModel, MediaModel, sequelize } = require('../../models');
+const { ProductModel, MediaModel, AttributeModel, AttributeDataModel, sequelize } = require('../../models');
 const { MoveFileToUploadFolder, getFileType } = require('../../utils/commonHelper');
 const CustomExceptionService = require('../../customExceptionHandler');
 const fs = require('fs');
@@ -112,6 +112,40 @@ const ProductService = {
                   });
 
                 resolve(product)
+            }catch(error){
+                reject(error)
+            }
+        });
+    },
+    getAttributesList: (inputs)=>{
+        return new Promise(async (resolve, reject )=>{
+            try{
+                const perPage   = inputs.per_page? parseInt(inputs.per_page) : parseInt(PER_PAGE);
+                const pageNo    = inputs.page_no? parseInt(inputs.page_no) : parseInt(DEFAULT_PAGE_NO);
+                const attribute = await AttributeModel.findOne({ where:{ slug: inputs.type }});
+                
+                if( !attribute ) reject(new CustomExceptionService(400,`${inputs.type} attribute is not available`));
+                
+                let attribute_data = await AttributeDataModel.findAndCountAll({
+                    attributes: { 
+                        exclude: ['createdAt', 'updatedAt'],
+                    },
+                    where:{ attribute_id: attribute.id },
+                    order: [
+                        [ 'createdAt', 'DESC']
+                    ],
+                    offset: (( pageNo-1 ) * perPage),
+                    limit:  perPage   
+                });
+
+                if( !attribute_data ) reject(new CustomExceptionService(400, 'Attribute data is not available '));
+
+                const result = attribute_data.rows;
+                const total_count = attribute_data.count;
+                const total_page = Math.ceil(total_count / perPage);
+                const current_page = pageNo;
+
+                resolve({result, current_page, total_count, total_page});
             }catch(error){
                 reject(error)
             }

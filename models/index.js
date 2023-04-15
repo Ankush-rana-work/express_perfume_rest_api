@@ -22,7 +22,8 @@ db.UserModel = require("./userModel")(sequelize, Sequelize);
 db.RoleModel = require("./roleModel")(sequelize, Sequelize);
 db.MediaModel = require("./mediaModel")(sequelize, Sequelize);
 db.ProductModel = require("./productModel")(sequelize, Sequelize);
-
+db.AttributeModel = require("./attributeModel")(sequelize, Sequelize);
+db.AttributeDataModel = require("./attributeDataModel")(sequelize, Sequelize);
 
 //relationships
 db.ProductModel.hasMany(db.MediaModel,{ as: 'productMedia', foreignKey: 'table_id' });

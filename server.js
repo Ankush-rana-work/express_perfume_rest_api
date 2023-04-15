@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const config = require("../backend/config");
+const config = require("./config");
 const Routes = require("./v1/routes");
 const db = require("./models");
 const { swaggerUi, specs } = require("./config/swaggerConfig");
