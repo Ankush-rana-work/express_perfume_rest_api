@@ -59,34 +59,35 @@ const UserController = {
  *   name: User
  *   description: The user managing API
  * /v1/user/login:
- *   get:
+ *   post:
  *     summary: User Login
  *     tags: [User]
- *     parameters:
- *       - in: query
- *         name: email
- *         schema:
- *           type: string
- *           description: User email.
- *           example: "xyz@gmail.com"
- *       - in: query
- *         name: password
- *         schema:
- *           type: string
- *           description: User password.
- *           example: "xyz@123456"
- *     responses:
- *       '200' :
- *         description: success
- *       '500' :
- *         description: internal server error
- *       '400' :
- *         description: invalid data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+*               properties:
+*                   email:
+*                       type: string
+*                       description: User email.
+*                       example: "xyz@gmail.com"
+*                   password:
+*                       type: string,
+*                       description: User password,
+*                       example: "xyz@123456"
+*     responses:
+*       '200' :
+*         description: success
+*       '500' :
+*         description: internal server error
+*       '400' :
+*         description: invalid data
+*
  */
-
   login: async (req, res, next) => {
     try {
-      const user = await UserService.login(req.query);
+      const user = await UserService.login(req.body);
       sendSucess(res, 200, Message.USER_LOGGED_IN, user);
     } catch (error) {
       next(error);

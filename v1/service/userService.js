@@ -74,13 +74,13 @@ const UserService = {
         });
 
         if (!user) {
-          throw new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, "User is not exist");
+          throw new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, "Invalid email and password");
         }
 
         // comparing password with exisitng has password for user
         const isPaswordValid = await hashCompare(input.password, user.password);
         if (!isPaswordValid) {
-          throw new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, "Invalid username and password" );
+          throw new CustomExceptionService(STATUS_CODE.HTTP_400_BAD_REQUEST, "Invalid email and password" );
         }
 
         // generating token

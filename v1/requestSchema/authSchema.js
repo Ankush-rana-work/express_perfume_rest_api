@@ -19,7 +19,7 @@ const AuthSchema = {
       password: Joi.string().max(20).required()
     });
     
-    JoiHelper.validate(schema, req.query, res, next);
+    JoiHelper.validate(schema, req.body, res, next);
   },
   refreshToken: (res, req, next)=>{
     const schema = Joi.object().keys({

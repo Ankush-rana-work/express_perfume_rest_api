@@ -5,12 +5,15 @@ const Routes = require("./v1/routes");
 const db = require("./models");
 const { swaggerUi, specs } = require("./config/swaggerConfig");
 const fileUpload = require("express-fileupload");
+const cors = require('cors');
 
 const PORT = process.env.PORT || config.PORT;
 // parse requests of content-type - application/json
 app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+// add cors to avoid issue
+app.use(cors());
 // swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
 
