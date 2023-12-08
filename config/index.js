@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'dev';
 
-const local = {
+const dev = {
     DB_HOST: process.env.LOCAL_DB_HOST,
     DB_USER: process.env.LOCAL_DB_USER,
     DB_PASS: process.env.LOCAL_DB_PASSWORD,
@@ -26,7 +26,7 @@ const local = {
     HASH_SALT : 10
 }
 
-const config = {local};
+const config = {dev};
 console.log(config);
 module.exports = config[env];
 

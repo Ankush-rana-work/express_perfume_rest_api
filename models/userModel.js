@@ -24,7 +24,7 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false
       },
       role_id: {
-        type: Sequelize.TINYINT,
+        type: Sequelize.BIGINT,
         allowNull: true,
         defaultValue: 1,
       },

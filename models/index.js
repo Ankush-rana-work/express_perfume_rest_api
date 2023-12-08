@@ -1,4 +1,5 @@
-const { DB_HOST, DB_USER, DB_PASS, DB_NAME, DIALECT,POOL } = require("../config");
+const config = require("../config");
+const { DB_HOST, DB_USER, DB_PASS, DB_NAME, DIALECT,POOL } = config;
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
@@ -18,8 +19,8 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.UserModel = require("./userModel")(sequelize, Sequelize);
 db.RoleModel = require("./roleModel")(sequelize, Sequelize);
+db.UserModel = require("./userModel")(sequelize, Sequelize);
 db.MediaModel = require("./mediaModel")(sequelize, Sequelize);
 db.ProductModel = require("./productModel")(sequelize, Sequelize);
 db.AttributeModel = require("./attributeModel")(sequelize, Sequelize);
