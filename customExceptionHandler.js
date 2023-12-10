@@ -7,4 +7,4 @@ class CustomExceptionService extends Error {
     }
 }
 
-module.exports = CustomExceptionService;
+export default CustomExceptionService;

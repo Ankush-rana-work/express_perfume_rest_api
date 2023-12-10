@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
+const MediaModel = (sequelize, Sequelize) => {
     const Media = sequelize.define("media", {
         id: {
           type: Sequelize.BIGINT,
@@ -29,3 +29,5 @@ module.exports = (sequelize, Sequelize) => {
     
     return Media;
 };
+
+export default MediaModel;

@@ -1,51 +1,53 @@
-const { ProductModel, MediaModel, AttributeModel, AttributeDataModel, sequelize } = require('../../models');
-const { MoveFileToUploadFolder, getFileType } = require('../../utils/commonHelper');
-const CustomExceptionService = require('../../customExceptionHandler');
-const fs = require('fs');
-const { PER_PAGE, DEFAULT_PAGE_NO } = require('../../config/constant');
-const { Op } = require('sequelize');
+import db from '../../models/index.js';
+import CommonHelper from '../../utils/commonHelper.js';
+import CustomExceptionService from '../../customExceptionHandler.js';
+import fs from 'fs';
+import constant from '../../config/constant.js';
+import { Op } from 'sequelize';
+
+const { ProductModel, MediaModel, AttributeModel, AttributeDataModel, sequelize } = db;
 
 const ProductService = {
-    create: (inputs, file)=>{
-        return  new Promise( async function(resolve, reject ){
-            try{
+    create: (inputs, file) => {
+        return new Promise(async function (resolve, reject) {
+            try {
                 const product = await ProductModel.create(inputs);
-                if ( file ) {
-                    const uploaded = await MoveFileToUploadFolder(file, 'products');
-                    if( uploaded.status ){
-                        const type = getFileType(file.mimetype);
+                if (file) {
+                    const uploaded = await CommonHelper.MoveFileToUploadFolder(file, 'products');
+                    if (uploaded.status) {
+                        const type = CommonHelper.getFileType(file.mimetype);
                         await MediaModel.create({
-                                'name': uploaded.path,
-                                'table_id': product.id,
-                                'type': type,
-                                'table_name': "product"
-                            });
+                            'name': uploaded.path,
+                            'table_id': product.id,
+                            'type': type,
+                            'table_name': "product"
+                        });
                     }
                 }
 
                 resolve(product);
-            }catch(error){
+            } catch (error) {
                 reject(error);
             }
         });
     },
-    update: ( inputs,product_id, file ) => {
-        return new Promise( async (resolve, reject)=>{
-            try{
+    update: (inputs, product_id, file) => {
+        return new Promise(async (resolve, reject) => {
+            try {
                 const product = await ProductModel.findOne({ where: { is_deleted: 0 } });
-                if( product ){
-                    product.title           = inputs.title;
-                    product.subtitle        = inputs.subtitle;
-                    product.price           = inputs.price;
-                    product.item_country    = inputs.item_country;
-                    product.handling_time   = inputs.handling_time;
-                    product.upc             = inputs.upc ;
+                if (product) {
+                    product.title = inputs.title;
+                    product.subtitle = inputs.subtitle;
+                    product.price = inputs.price;
+                    product.item_country = inputs.item_country;
+                    product.handling_time = inputs.handling_time;
+                    product.upc = inputs.upc;
                     product.manufacturer_name = inputs.manufacturer_name;
-                    product.is_active       = 1;
+                    product.is_active = 1;
 
-                    if( product.save() ){
+                    if (product.save()) {
                         // getting image image from media table
-                        const media = await MediaModel.findOne({where: { table_id: product.id}});
+                        const media = await MediaModel.findOne({ where: { table_id: product.id } });
                         // generating file absolute path
                         const uploadPath = __dirname + '/../../' + media.name;
                         // removing file from storage
@@ -53,45 +55,45 @@ const ProductService = {
                         //deleting previous image entry from media table
                         await media.destroy();
                         // checking if image is selected
-                        if ( file ) {
+                        if (file) {
                             // moving file from tem to upload product folder
-                            const uploaded = await MoveFileToUploadFolder(file, 'products');
-                            if( uploaded.status ){
-                                const type = getFileType(file.mimetype);
+                            const uploaded = await CommonHelper.MoveFileToUploadFolder(file, 'products');
+                            if (uploaded.status) {
+                                const type = CommonHelper.getFileType(file.mimetype);
                                 await MediaModel.create({
-                                        'name': uploaded.path,
-                                        'table_id': product.id,
-                                        'type': type,
-                                        'table_name': "product"
-                                    });
+                                    'name': uploaded.path,
+                                    'table_id': product.id,
+                                    'type': type,
+                                    'table_name': "product"
+                                });
                             }
                         }
                     }
                     resolve(product);
                 }
                 reject(new new CustomExceptionService(400, "Email already exist"));
-            }catch(error){
+            } catch (error) {
                 reject(error);
             }
         });
     },
-    show: async ( inputs ) => {
-        return new Promise( async (resolve, reject )=>{
-            try{
-                const perPage   = inputs.per_page? inputs.per_page : PER_PAGE;
-                const pageNo    = inputs.page_no? inputs.page_no : DEFAULT_PAGE_NO;
-                const search    = inputs.search? inputs.search : '';
-                let condition   = {};
-                condition.is_deleted    = 0;
-                condition.is_active     = 1;
+    show: async (inputs) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const perPage = inputs.per_page ? inputs.per_page : constant.PER_PAGE;
+                const pageNo = inputs.page_no ? inputs.page_no : constant.DEFAULT_PAGE_NO;
+                const search = inputs.search ? inputs.search : '';
+                let condition = {};
+                condition.is_deleted = 0;
+                condition.is_active = 1;
 
-                if( search!=''){
-                    condition.title     = { [Op.like]: `%${search}%` };
+                if (search != '') {
+                    condition.title = { [Op.like]: `%${search}%` };
                 }
-                
-                const product  = await ProductModel.findAll({
+
+                const product = await ProductModel.findAll({
                     where: condition,
-                    attributes: { 
+                    attributes: {
                         exclude: ['createdAt', 'updatedAt'],
                         include: [
                             [sequelize.literal('createdAt'), 'createdAt']
@@ -100,53 +102,41 @@ const ProductService = {
                     include: [{
                         model: MediaModel,
                         as: 'product_media', // specify the alias as 'productMedia'
-                        attributes: { 
+                        attributes: {
                             exclude: ['createdAt', 'updatedAt'],
-                        }    
+                        }
                     }],
                     order: [
-                        [ 'createdAt', 'DESC']
+                        ['createdAt', 'DESC']
                     ],
-                    offset: (( pageNo-1 ) * perPage),
-                    limit:  perPage
-                  });
+                    offset: ((pageNo - 1) * perPage),
+                    limit: perPage
+                });
 
                 resolve(product)
-            }catch(error){
+            } catch (error) {
                 reject(error)
             }
         });
     },
-    getAttributesList: (inputs)=>{
-        return new Promise(async (resolve, reject )=>{
-            try{
-                const perPage   = inputs.per_page? parseInt(inputs.per_page) : parseInt(PER_PAGE);
-                const pageNo    = inputs.page_no? parseInt(inputs.page_no) : parseInt(DEFAULT_PAGE_NO);
-                const attribute = await AttributeModel.findOne({ where:{ slug: inputs.type }});
-                
-                if( !attribute ) reject(new CustomExceptionService(400,`${inputs.type} attribute is not available`));
-                
-                let attribute_data = await AttributeDataModel.findAndCountAll({
-                    attributes: { 
-                        exclude: ['createdAt', 'updatedAt'],
+    getAttributesList: (inputs) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                let attribute_data = await AttributeModel.findAll({
+                    include: {
+                        model: AttributeDataModel,
+                        as: 'attribute_data',
+                        attributes: { exclude: ['createdAt', 'updatedAt', 'attribute_id'] }
                     },
-                    where:{ attribute_id: attribute.id },
-                    order: [
-                        [ 'createdAt', 'DESC']
-                    ],
-                    offset: (( pageNo-1 ) * perPage),
-                    limit:  perPage   
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt'],
+                    }
                 });
 
-                if( !attribute_data ) reject(new CustomExceptionService(400, 'Attribute data is not available '));
 
-                const result = attribute_data.rows;
-                const total_count = attribute_data.count;
-                const total_page = Math.ceil(total_count / perPage);
-                const current_page = pageNo;
-
-                resolve({result, current_page, total_count, total_page});
-            }catch(error){
+                resolve({ attribute_data });
+            } catch (error) {
                 reject(error)
             }
         });
@@ -154,4 +144,4 @@ const ProductService = {
 
 }
 
-module.exports= ProductService;
+export default ProductService;

@@ -1,4 +1,4 @@
-const Constant = {
+const constant = {
   STATUS_CODE: {
     HTTP_200_OK: 200,
     HTTP_201_CREATED: 201,
@@ -13,4 +13,4 @@ const Constant = {
   DEFAULT_PAGE_NO : 1
 };
 
-module.exports = Constant;
+export default constant;

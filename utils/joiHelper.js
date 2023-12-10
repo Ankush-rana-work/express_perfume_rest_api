@@ -1,17 +1,18 @@
-const { sendError } = require("../utils/commonHelper");
-const Constant  = require("../config/constant");
+import CommonHelper from "../utils/commonHelper.js";
+import constant from "../config/constant.js";
 
+const { sendError } = CommonHelper;
 const JoiHelper = {
     validate: (schema, inputs , res, next)=>{
         const { error } = schema.validate(inputs);
         if (error) {
-          error.statusCode=Constant.STATUS_CODE.HTTP_400_BAD_REQUEST;
+          error.statusCode=constant.STATUS_CODE.HTTP_400_BAD_REQUEST;
           next(error);
-          //sendError(res, Constant.STATUS_CODE.HTTP_400_BAD_REQUEST, error.details[0].message);
+          //sendError(res, constant.STATUS_CODE.HTTP_400_BAD_REQUEST, error.details[0].message);
         } else {
           next();
         }
     }
 }
 
-module.exports = JoiHelper;
+export default JoiHelper;

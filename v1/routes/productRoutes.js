@@ -1,12 +1,13 @@
-const router = require('express').Router();
-const ProductController = require('../controllers/productController');
-const auth = require('../middlewares/authMiddleware');
-const ProductSchema = require('../requestSchema/productSchema');
+import { Router } from 'express';
+import ProductController from '../controllers/productController.js';
+import auth from "../middlewares/authMiddleware.js";
+import ProductSchema from "../requestSchema/productSchema.js";
 
+const router = Router();
 router.post('/create', auth, ProductSchema.createEdit, ProductController.create);
 router.put('/edit/:id', auth, ProductSchema.createEdit, ProductController.edit);
 router.get('/show', auth, ProductSchema.show, ProductController.show);
-router.get('/attributes', ProductSchema.attributes, ProductController.getAttributes ) 
+router.get('/attributes', ProductController.getAttributes ) 
 
 
-module.exports = router;
+export default router;

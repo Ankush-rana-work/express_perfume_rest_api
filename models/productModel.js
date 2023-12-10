@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
+const ProductModel = (sequelize, Sequelize) => {
     const Product = sequelize.define("product", {
       id: {
         type: Sequelize.BIGINT,
@@ -36,6 +36,26 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         defaultValue: 0,
       },
+      brand: {
+        type: Sequelize.BIGINT,
+        allowNull: true
+      },
+      volume: {
+        type: Sequelize.BIGINT,
+        allowNull: true
+      },
+      shop_for: {
+        type: Sequelize.BIGINT,
+        allowNull: true
+      },
+      fragrance_name: {
+        type: Sequelize.BIGINT,
+        allowNull: true
+      },
+      type: {
+        type: Sequelize.BIGINT,
+        allowNull: true
+      },
       is_active: {
         type: Sequelize.TINYINT,
         allowNull: false,
@@ -52,3 +72,5 @@ module.exports = (sequelize, Sequelize) => {
   
     return Product;
   };
+
+  export default ProductModel;

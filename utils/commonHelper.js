@@ -1,5 +1,5 @@
-const { HASH_SALT } = require('../config/index');
-const bcrypt = require("bcryptjs");
+import config from '../config/index.js';
+import bcrypt from 'bcryptjs';
 
 const CommonHelper = {
     sendError: (res, statusCode, message) => {
@@ -15,7 +15,7 @@ const CommonHelper = {
         return new Promise( async (resolve, reject )=>{
             try{
                 // Hash the password
-                const salt = await bcrypt.genSalt(HASH_SALT);
+                const salt = await bcrypt.genSalt(config.HASH_SALT);
                 const hashedPassword = await bcrypt.hash(password, salt);
                 resolve(hashedPassword);
             }catch(error){
@@ -65,4 +65,4 @@ const CommonHelper = {
 
 }
 
-module.exports = CommonHelper;
+export default CommonHelper;

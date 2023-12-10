@@ -1,6 +1,6 @@
-const Message = require('../../local/message');
-const { sendSucess } = require("../../utils/commonHelper");
-const ProductService =  require("../service/productService");
+import Message from '../../local/message.js';
+import CommonHelper from '../../utils/commonHelper.js';
+import ProductService from '../service/productService.js';
 
 const ProductController = {
     /**
@@ -59,7 +59,7 @@ const ProductController = {
         try{
 
             const product = await ProductService.create(req.body, req.files?.image);
-            sendSucess(res, 200, Message.PRODUCT_CREATE, product);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_CREATE, product);
         }catch(error){
             next(error);
         }
@@ -172,7 +172,7 @@ const ProductController = {
     show: async ( req, res, next ) => {
         try{
             const product = await ProductService.show(req.body);
-            sendSucess(res, 200, Message.PRODUCT_LIST, product);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, product);
         }catch(error){
             next(error);
         }
@@ -217,11 +217,11 @@ const ProductController = {
     getAttributes: async (req, res, next)=>{
         try{
             const attribute_list = await ProductService.getAttributesList(req.query);
-            sendSucess(res, 200, Message.PRODUCT_LIST, attribute_list);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, attribute_list);
         }catch(error){
             next(error);
         }
     }
 }
 
-module.exports = ProductController
+export default ProductController;
