@@ -1,5 +1,5 @@
-const Joi = require("joi");
-const JoiHelper = require("../../utils/joiHelper");
+import Joi from "joi";
+import JoiHelper from "../../utils/joiHelper.js";
 
 const ProductSchema = {
     createEdit: (req, res, next)=>{
@@ -25,7 +25,6 @@ const ProductSchema = {
     },
     attributes: (req, res, next)=>{
         const schema = Joi.object().keys({
-            "type": Joi.string().valid('brand', 'volume', 'shop_for', 'formulation').required(),
             "per_page": Joi.number().min(1),
             "page_no": Joi.number().min(1),
         });
@@ -34,4 +33,4 @@ const ProductSchema = {
     }
 }
 
-module.exports = ProductSchema;
+export default ProductSchema;

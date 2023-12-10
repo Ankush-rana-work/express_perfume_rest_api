@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
+ const RoleModel = (sequelize, Sequelize) => {
   const Role = sequelize.define("role", {
     id: {
       type: Sequelize.BIGINT,
@@ -14,8 +14,10 @@ module.exports = (sequelize, Sequelize) => {
       values: ['Admin', 'User']
     }
   }, {
-      tableName: 'tbl_role'
+    tableName: 'tbl_role'
   });
 
   return Role;
 };
+
+export default RoleModel;

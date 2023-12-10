@@ -1,11 +1,13 @@
-const express = require("express");
+import express from "express";
+import config from "./config/index.js";
+import Routes from "./v1/routes/index.js";
+import db from "./models/index.js";
+import { swaggerUi, specs } from "./config/swaggerConfig.js";
+import fileUpload from "express-fileupload";
+import cors from 'cors';
+import abc from "./v1/controllers/productController.js";
+
 const app = express();
-const config = require("./config");
-const Routes = require("./v1/routes");
-const db = require("./models");
-const { swaggerUi, specs } = require("./config/swaggerConfig");
-const fileUpload = require("express-fileupload");
-const cors = require('cors');
 
 const PORT = process.env.PORT || config.PORT;
 // parse requests of content-type - application/json
@@ -36,6 +38,7 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.log("Middleware Error Handling");
+  console.log(err);
   const errStatus = err.statusCode || 500;
   const errMsg = err.message || "Something went wrong";
   res.status(errStatus).json({

@@ -1,7 +1,8 @@
-const { JWT } = require("../config/index");
-var jwt = require("jsonwebtoken");
-const CustomExceptionService = require("../customExceptionHandler");
+import config from '../config/index.js';
+import jwt from 'jsonwebtoken';
+import CustomExceptionService from '../customExceptionHandler.js';
 
+const { JWT } = config;
 const JwtHelper = {
   generateToken: (payload) => {
     return new Promise((resolve, reject) => {
@@ -46,4 +47,4 @@ const JwtHelper = {
   },
 };
 
-module.exports = JwtHelper;
+export default JwtHelper;

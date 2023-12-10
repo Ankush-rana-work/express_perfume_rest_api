@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize)=>{
+const AttributeDataModel = (sequelize, Sequelize)=>{
     const AttributeData = sequelize.define("attributeData", {
         id: {
             type: Sequelize.BIGINT,
@@ -20,3 +20,5 @@ module.exports = (sequelize, Sequelize)=>{
     
     return AttributeData;
 }
+
+export default AttributeDataModel;

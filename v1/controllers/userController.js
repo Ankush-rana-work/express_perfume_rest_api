@@ -1,8 +1,9 @@
-const UserService = require("../service/userService");
-const { sendError, sendSucess } = require("../../utils/commonHelper");
-const Message = require("../../local/message");
-const JwtHelper = require("../../utils/jwtHelper");
+import UserService from '../service/userService.js';
+import CommonHelper from '../../utils/commonHelper.js';
+import Message from '../../local/message.js';
+import JwtHelper from '../../utils/jwtHelper.js';
 
+const { sendError, sendSucess } = CommonHelper;
 const UserController = {
   /**
  * @swagger
@@ -121,14 +122,14 @@ const UserController = {
 *         description: invalid data
 *
  */
-  refreshToken: async (req, res, next) =>{
-    try{
+  refreshToken: async (req, res, next) => {
+    try {
       const user = await UserService.refreshToken(req.body);
       sendSucess(res, 200, Message.USER_LOGGED_IN, user);
-    }catch(error){
+    } catch (error) {
       next(error);
     }
   },
 };
 
-module.exports = UserController;
+export default UserController;

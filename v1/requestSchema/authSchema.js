@@ -1,5 +1,5 @@
-const Joi = require("joi");
-const JoiHelper = require("../../utils/joiHelper");
+import Joi from "joi";
+import JoiHelper from "../../utils/joiHelper.js";
 
 const AuthSchema = {
   register: (req, res, next) => {
@@ -30,4 +30,4 @@ const AuthSchema = {
   }
 };
 
-module.exports = AuthSchema;
+export default AuthSchema;

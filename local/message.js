@@ -12,4 +12,4 @@ const Message = {
     }
 }
 
-module.exports = Message["en"];
+export default Message["en"];

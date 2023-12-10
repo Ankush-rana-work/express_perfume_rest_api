@@ -1,7 +1,8 @@
-const swaggerJsdoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
-const { PORT } = require("../config/index");
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express"
+import config from "../config/index.js";
 
+const {PORT} = config;
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -43,5 +44,5 @@ const options = {
   apis: ["./v1/controllers/*.js"],
 };
 
-const specs = swaggerJsdoc(options);
-module.exports = { swaggerUi, specs };
+const specs = swaggerJSDoc(options);
+export { swaggerUi, specs };
