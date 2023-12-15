@@ -57,9 +57,8 @@ const ProductController = {
     */
     create: async ( req, res, next )=>{
         try{
-
             const product = await ProductService.create(req.body, req.files?.image);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_CREATE, product);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_CREATE, null);
         }catch(error){
             next(error);
         }
@@ -128,7 +127,7 @@ const ProductController = {
         try{
             const product_id = req.params.id;
             const product = await ProductService.update(req.body, product_id, req.files?.image);
-            sendSucess(res, 200, Message.PRODUCT_UPDATED, product);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_UPDATED, product);
         }catch(error){
             next(error);
         }
@@ -221,7 +220,71 @@ const ProductController = {
         }catch(error){
             next(error);
         }
+    },
+          /**
+     * @swagger
+     * tags:
+     *   name: Product
+     *   description: The product managing API
+     * /v1/product/list:
+     *   get:
+     *     summary: Product listing
+     *     tags: [Product]
+     *     parameters:
+     *       - in: query
+     *         name: per_page
+     *         schema:
+     *           type: integer
+     *           description: Per page number.
+     *           example: 10
+     *       - in: query
+     *         name: page_no
+     *         schema:
+     *           type: integer
+     *           description: Page number.
+     *           example: 1
+     *       - in: query
+     *         name: type
+     *         schema:
+     *           type: string
+     *           description: attributes type.
+     *           enum: [brand, volume, shop_for, formulation]
+     *           example: ""
+     *     responses:
+     *       '200' :
+     *         description: success
+     *       '500' :
+     *         description: internal server error
+     *       '400' :
+     *         description: invalid data
+     */
+    list: async(req, res, next) => {
+        try{
+            const attribute_list = await ProductService.getProductList(req.query);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, attribute_list);
+        }catch(error){
+            next(error);
+        }
+    },
+    delete: async(req, res, next) => {
+        try{
+            const product_id = req.params.id;
+            await ProductService.deleteProduct(product_id);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_DELETE, null);
+        }catch(error){
+            next(error);
+        } 
+    },
+    relatedProduct: async(req, res, next) => {
+        try{
+            const product_id = req.params.productId;
+            const productList = await ProductService.relatedProduct(product_id);
+            CommonHelper.sendSucess(res, 200, Message.RELATED_PRODUCT_LIST, productList);
+        }catch(error){
+            next(error);
+        }
     }
+    
 }
 
 export default ProductController;

@@ -37,5 +37,10 @@ db.UserModel.belongsTo(db.RoleModel, {as: 'user_role', foreignKey: 'role_id'});
 db.ProductModel.hasMany(db.MediaModel,{ as: 'product_media', foreignKey: 'table_id' });
 db.MediaModel.belongsTo(db.ProductModel, { as: 'media_product', foreignKey: 'table_id' });
 db.AttributeModel.hasMany(db.AttributeDataModel,{ as:'attribute_data', foreignKey: 'attribute_id' });
-
+db.ProductModel.belongsTo(db.AttributeDataModel,{ as: 'attr_brand', foreignKey: 'brand' });
+db.ProductModel.belongsTo(db.AttributeDataModel,{ as: 'attr_volume', foreignKey: 'volume' });
+db.ProductModel.belongsTo(db.AttributeDataModel,{ as: 'attr_shop_for', foreignKey: 'shop_for' });
+db.ProductModel.belongsTo(db.AttributeDataModel,{ as: 'attr_fragrancename', foreignKey: 'fragrance_name' });
+db.ProductModel.belongsTo(db.AttributeDataModel,{ as: 'attr_type', foreignKey: 'type' });
+db.AttributeDataModel.belongsTo(db.AttributeModel,{ as: 'attr_name', foreignKey: 'attribute_id' });
 export default db;

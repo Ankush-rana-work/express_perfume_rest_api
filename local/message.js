@@ -8,7 +8,9 @@ const Message = {
         USER_LOGGED_IN: "User logged in",
         PRODUCT_CREATE: "Product created successfully",
         PRODUCT_UPDATED: "Product updated successfully",
-        PRODUCT_LIST: "Product List"
+        PRODUCT_LIST: "Product List",
+        PRODUCT_DELETE: "Product deleted successfully",
+        RELATED_PRODUCT_LIST: "Related product list"
     }
 }
 

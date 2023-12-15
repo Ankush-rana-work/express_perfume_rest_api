@@ -5,7 +5,6 @@ import db from "./models/index.js";
 import { swaggerUi, specs } from "./config/swaggerConfig.js";
 import fileUpload from "express-fileupload";
 import cors from 'cors';
-import abc from "./v1/controllers/productController.js";
 
 const app = express();
 

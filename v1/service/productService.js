@@ -1,7 +1,6 @@
 import db from '../../models/index.js';
 import CommonHelper from '../../utils/commonHelper.js';
 import CustomExceptionService from '../../customExceptionHandler.js';
-import fs from 'fs';
 import constant from '../../config/constant.js';
 import { Op } from 'sequelize';
 
@@ -44,8 +43,10 @@ const ProductService = {
                     product.upc = inputs.upc;
                     product.manufacturer_name = inputs.manufacturer_name;
                     product.is_active = 1;
+                    product.updatedAt = new Date();
 
                     if (product.save()) {
+
                         // getting image image from media table
                         const media = await MediaModel.findOne({ where: { table_id: product.id } });
                         // generating file absolute path
@@ -119,25 +120,147 @@ const ProductService = {
             }
         });
     },
-    getAttributesList: (inputs) => {
+    getProductList: (inputs) => {
         return new Promise(async (resolve, reject) => {
             try {
+                const page = parseInt(inputs.page_no) || 1;
+                const pageSize = parseInt(inputs.per_page) || 10;
+                const offset = (page - 1) * pageSize;
+                const { count, rows} = await ProductModel.findAndCountAll({
+                    include: [{
+                        model: AttributeDataModel,
+                        as: 'attr_brand',
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt', 'attribute_id'],
+                        },
+                        include: {
+                            model: AttributeModel,
+                            as: 'attr_name',
+                            attributes: {
+                                exclude: ['createdAt', 'updatedAt', 'attribute_id'],
+                            },
+                        }
+                    }, {
+                        model: AttributeDataModel,
+                        as: 'attr_volume',
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt', 'attribute_id'],
+                        },
+                        include: {
+                            model: AttributeModel,
+                            as: 'attr_name',
+                            attributes: {
+                                exclude: ['createdAt', 'updatedAt', 'attribute_id'],
+                            },
+                        }
+                    },
+                    {
+                        model: AttributeDataModel,
+                        as: 'attr_shop_for',
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt', 'attribute_id'],
+                        },
+                        include: {
+                            model: AttributeModel,
+                            as: 'attr_name',
+                            attributes: {
+                                exclude: ['createdAt', 'updatedAt', 'attribute_id'],
+                            },
+                        }
+                    },
+                    {
+                        model: AttributeDataModel,
+                        as: 'attr_fragrancename',
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt', 'attribute_id'],
+                        },
+                        include: {
+                            model: AttributeModel,
+                            as: 'attr_name',
+                            attributes: {
+                                exclude: ['createdAt', 'updatedAt', 'attribute_id'],
+                            },
+                        }
+                    }],
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt'],
+                    },
+                    limit: pageSize,
+                    offset: offset,
+                });
 
-                let attribute_data = await AttributeModel.findAll({
+                const totalPages = Math.ceil(count / pageSize);
+                resolve({totalPages, count, rows});
+            } catch (error) {
+                reject(error)
+            }
+        });
+    },
+    getAttributesList: () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const attributeData = AttributeModel.findAll({
                     include: {
                         model: AttributeDataModel,
                         as: 'attribute_data',
-                        attributes: { exclude: ['createdAt', 'updatedAt', 'attribute_id'] }
-                    },
-                    attributes: {
-                        exclude: ['createdAt', 'updatedAt'],
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt', 'attribute_id']
+                        }
                     }
-                });
+                })
 
-
-                resolve({ attribute_data });
+                resolve(attributeData);
             } catch (error) {
-                reject(error)
+                reject(error);
+            }
+        });
+    },
+    deleteProduct: (productId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                // Find the product you want to delete
+                const product = await ProductModel.findByPk(productId);
+
+                if (product) {
+                    // Delete the product
+                    await product.destroy();
+                    resolve();
+                } else {
+                    reject(new CustomExceptionService(400, "Product not found"));
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    },
+    relatedProduct: (productId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                // Find the product you want to delete
+                const product = await ProductModel.findByPk(productId);
+                console.log(product.brand);
+                if (product) {
+                    // Find the product you want to delete
+                    const realtedProduct = await ProductModel.findAll({
+                        where: {
+                            brand: product.brand,
+                            id: {
+                                [Op.not]: product.id // Define the condition where 'someField' is NOT equal to 'someValue'
+                            }
+                        },
+                        order: [
+                            ['updatedAt', 'DESC'] // Order by 'updatedAt' column in descending order
+                        ],
+                        limit: 20 // Limit the result to 20 records
+                    });
+                    resolve(realtedProduct);
+                } else {
+                    reject(new CustomExceptionService(400, "Product not found"));
+                }
+
+            } catch (error) {
+                reject(error);
             }
         });
     }
