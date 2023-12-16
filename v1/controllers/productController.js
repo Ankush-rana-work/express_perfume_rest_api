@@ -57,8 +57,9 @@ const ProductController = {
     */
     create: async ( req, res, next )=>{
         try{
-            const product = await ProductService.create(req.body, req.files?.image);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_CREATE, null);
+            console.log(req.body);
+            const product = await ProductService.create(req);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_CREATE??'', null);
         }catch(error){
             next(error);
         }
@@ -126,7 +127,7 @@ const ProductController = {
     edit: async ( req, res, next )=>{
         try{
             const product_id = req.params.id;
-            const product = await ProductService.update(req.body, product_id, req.files?.image);
+            const product = await ProductService.update(req, product_id);
             CommonHelper.sendSucess(res, 200, Message.PRODUCT_UPDATED, product);
         }catch(error){
             next(error);

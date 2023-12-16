@@ -3,25 +3,29 @@ import CommonHelper from '../../utils/commonHelper.js';
 import CustomExceptionService from '../../customExceptionHandler.js';
 import constant from '../../config/constant.js';
 import { Op } from 'sequelize';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const { ProductModel, MediaModel, AttributeModel, AttributeDataModel, sequelize } = db;
 
 const ProductService = {
-    create: (inputs, file) => {
+    create: (inputs) => {
         return new Promise(async function (resolve, reject) {
             try {
-                const product = await ProductModel.create(inputs);
-                if (file) {
-                    const uploaded = await CommonHelper.MoveFileToUploadFolder(file, 'products');
-                    if (uploaded.status) {
-                        const type = CommonHelper.getFileType(file.mimetype);
-                        await MediaModel.create({
-                            'name': uploaded.path,
-                            'table_id': product.id,
-                            'type': type,
-                            'table_name': "product"
-                        });
-                    }
+                const product = await ProductModel.create(inputs.body);
+                if (inputs.file) {
+                    const type = CommonHelper.getFileType(inputs.file.mimetype);
+                    await MediaModel.create({
+                        'name': inputs.file.path,
+                        'table_id': product.id,
+                        'type': type,
+                        'table_name': "product"
+                    });
+
                 }
 
                 resolve(product);
@@ -30,18 +34,18 @@ const ProductService = {
             }
         });
     },
-    update: (inputs, product_id, file) => {
+    update: (inputs, product_id) => {
         return new Promise(async (resolve, reject) => {
             try {
-                const product = await ProductModel.findOne({ where: { is_deleted: 0 } });
+                const product = await ProductModel.findOne({ where: { is_deleted: 0, id: product_id } });
                 if (product) {
-                    product.title = inputs.title;
-                    product.subtitle = inputs.subtitle;
-                    product.price = inputs.price;
-                    product.item_country = inputs.item_country;
-                    product.handling_time = inputs.handling_time;
-                    product.upc = inputs.upc;
-                    product.manufacturer_name = inputs.manufacturer_name;
+                    product.title = inputs.body.title;
+                    product.subtitle = inputs.body.subtitle;
+                    product.price = inputs.body.price;
+                    product.item_country = inputs.body.item_country;
+                    product.handling_time = inputs.body.handling_time;
+                    product.upc = inputs.body.upc;
+                    product.manufacturer_name = inputs.body.manufacturer_name;
                     product.is_active = 1;
                     product.updatedAt = new Date();
 
@@ -49,20 +53,21 @@ const ProductService = {
 
                         // getting image image from media table
                         const media = await MediaModel.findOne({ where: { table_id: product.id } });
-                        // generating file absolute path
-                        const uploadPath = __dirname + '/../../' + media.name;
-                        // removing file from storage
-                        fs.unlinkSync(uploadPath);
-                        //deleting previous image entry from media table
-                        await media.destroy();
+                        if (media) {
+                            // generating file absolute path
+                            const uploadPath = __dirname + '/../../' + media.name;
+                            // removing file from storage
+                            fs.unlinkSync(uploadPath);
+                            //deleting previous image entry from media table
+                            await media.destroy();
+                        }
                         // checking if image is selected
-                        if (file) {
+                        if (inputs.file) {
                             // moving file from tem to upload product folder
-                            const uploaded = await CommonHelper.MoveFileToUploadFolder(file, 'products');
-                            if (uploaded.status) {
-                                const type = CommonHelper.getFileType(file.mimetype);
+                            if (inputs.file) {
+                                const type = CommonHelper.getFileType(inputs.file.mimetype);
                                 await MediaModel.create({
-                                    'name': uploaded.path,
+                                    'name': inputs.file.path,
                                     'table_id': product.id,
                                     'type': type,
                                     'table_name': "product"
@@ -105,7 +110,7 @@ const ProductService = {
                         as: 'product_media', // specify the alias as 'productMedia'
                         attributes: {
                             exclude: ['createdAt', 'updatedAt'],
-                        }
+                        },
                     }],
                     order: [
                         ['createdAt', 'DESC']
@@ -126,7 +131,7 @@ const ProductService = {
                 const page = parseInt(inputs.page_no) || 1;
                 const pageSize = parseInt(inputs.per_page) || 10;
                 const offset = (page - 1) * pageSize;
-                const { count, rows} = await ProductModel.findAndCountAll({
+                const { count, rows } = await ProductModel.findAndCountAll({
                     include: [{
                         model: AttributeDataModel,
                         as: 'attr_brand',
@@ -181,6 +186,12 @@ const ProductService = {
                                 exclude: ['createdAt', 'updatedAt', 'attribute_id'],
                             },
                         }
+                    }, {
+                        model: MediaModel,
+                        as: 'product_media', // specify the alias as 'productMedia'
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt', 'table_id'],
+                        }
                     }],
                     attributes: {
                         exclude: ['createdAt', 'updatedAt'],
@@ -190,7 +201,7 @@ const ProductService = {
                 });
 
                 const totalPages = Math.ceil(count / pageSize);
-                resolve({totalPages, count, rows});
+                resolve({ totalPages, count, rows });
             } catch (error) {
                 reject(error)
             }

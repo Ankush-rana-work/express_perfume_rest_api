@@ -3,6 +3,7 @@ import JoiHelper from "../../utils/joiHelper.js";
 
 const ProductSchema = {
     createEdit: (req, res, next)=>{
+        console.log(req.body)
         const schema = Joi.object().keys({
             "title"         : Joi.string().min(3).max(255).required(),
             "subtitle"      : Joi.string().min(3).max(255).required(),
