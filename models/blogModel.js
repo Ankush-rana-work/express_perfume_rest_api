@@ -6,7 +6,7 @@ const BlogModel = (sequelize, Sequelize) => {
         primaryKey: true
     
       },
-      name: {
+      title: {
         type: Sequelize.STRING(255),
         allowNull: false
       },
@@ -15,7 +15,7 @@ const BlogModel = (sequelize, Sequelize) => {
         allowNull: false,
         unique: true,
       },
-      userId: {
+      user_id: {
         type: Sequelize.BIGINT,
         allowNull: false
       },
@@ -38,10 +38,10 @@ const BlogModel = (sequelize, Sequelize) => {
         defaultValue: 0,
       }
     }, {
-        tableName: 'tbl_product'
+        tableName: 'tbl_blog'
     });
   
     return Product;
   };
 
-  export default ProductModel;
+  export default BlogModel;
