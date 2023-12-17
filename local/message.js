@@ -17,6 +17,11 @@ const Message = {
         BLOG_UPDATED: "Blog updated successfully",
         BLOG_LIST: "Blog List",
         BLOG_DELETE: "Blog deleted successfully",
+        // CART MESSAGE
+        CART_ADD: "Cart created successfully",
+        CART_UPDATED: "Cart updated successfully",
+        CART_LIST: "Cart List",
+        CART_DELETE: "Cart deleted successfully",
     }
 }
 
