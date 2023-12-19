@@ -5,6 +5,7 @@ import db from '../../models/index.js';
 const { UserModel } = db;
 export default async (req, res, next) => {
     try {
+        console.log(req.headers)
         if (req.headers.authorization) {
             const token = req.headers.authorization.split(' ')[1];
             const decode = await JwtHelper.tokenVerify(token);

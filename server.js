@@ -5,10 +5,9 @@ import db from "./models/index.js";
 import { swaggerUi, specs } from "./config/swaggerConfig.js";
 import fileUpload from "express-fileupload";
 import cors from 'cors';
-import abc from "./v1/controllers/productController.js";
+import multer from "multer";
 
 const app = express();
-
 const PORT = process.env.PORT || config.PORT;
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -18,14 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
-
-app.use(
-  fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 },
-    useTempFiles: true,
-    tempFileDir: "uploads/temp/",
-  })
-);
 
 // verison one all routes
 app.use("/api/v1/", Routes);

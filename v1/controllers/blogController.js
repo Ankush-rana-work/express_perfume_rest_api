@@ -1,8 +1,9 @@
 import Message from '../../local/message.js';
 import CommonHelper from '../../utils/commonHelper.js';
+import BlogService from '../service/blogService.js';
 import ProductService from '../service/productService.js';
 
-const ProductController = {
+const BlogController = {
     /**
     * @swagger
     * tags:
@@ -58,8 +59,8 @@ const ProductController = {
     create: async ( req, res, next )=>{
         try{
             console.log(req.body);
-            const product = await ProductService.create(req);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_CREATE??'', null);
+            const blog = await BlogService.create(req);
+            CommonHelper.sendSucess(res, 200, Message.BLOG_CREATE??'', null);
         }catch(error){
             next(error);
         }
@@ -126,9 +127,9 @@ const ProductController = {
     */
     edit: async ( req, res, next )=>{
         try{
-            const product_id = req.params.id;
-            const product = await ProductService.update(req, product_id);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_UPDATED, product);
+            const blogId = req.params.blogId;
+            const blog = await BlogService.update(req, blogId);
+            CommonHelper.sendSucess(res, 200, Message.BLOG_UPDATED, blog);
         }catch(error){
             next(error);
         }
@@ -177,52 +178,7 @@ const ProductController = {
             next(error);
         }
     },
-      /**
-     * @swagger
-     * tags:
-     *   name: Product
-     *   description: The product managing API
-     * /v1/product/attributes:
-     *   get:
-     *     summary: Product attributes list
-     *     tags: [Product]
-     *     parameters:
-     *       - in: query
-     *         name: per_page
-     *         schema:
-     *           type: integer
-     *           description: Per page number.
-     *           example: 10
-     *       - in: query
-     *         name: page_no
-     *         schema:
-     *           type: integer
-     *           description: Page number.
-     *           example: 1
-     *       - in: query
-     *         name: type
-     *         schema:
-     *           type: string
-     *           description: attributes type.
-     *           enum: [brand, volume, shop_for, formulation]
-     *           example: ""
-     *     responses:
-     *       '200' :
-     *         description: success
-     *       '500' :
-     *         description: internal server error
-     *       '400' :
-     *         description: invalid data
-     */
-    getAttributes: async (req, res, next)=>{
-        try{
-            const attribute_list = await ProductService.getAttributesList(req.query);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, attribute_list);
-        }catch(error){
-            next(error);
-        }
-    },
-          /**
+    /**
      * @swagger
      * tags:
      *   name: Product
@@ -261,31 +217,22 @@ const ProductController = {
      */
     list: async(req, res, next) => {
         try{
-            const attribute_list = await ProductService.getProductList(req.query);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, attribute_list);
+            const blogList = await BlogService.getBlogList(req.query);
+            CommonHelper.sendSucess(res, 200, Message.BLOG_LIST, blogList);
         }catch(error){
             next(error);
         }
     },
     delete: async(req, res, next) => {
         try{
-            const product_id = req.params.id;
-            await ProductService.deleteProduct(product_id);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_DELETE, null);
+            const blogId = req.params.blogId;
+            await BlogService.deleteBlog(blogId);
+            CommonHelper.sendSucess(res, 200, Message.BLOG_DELETE, null);
         }catch(error){
             next(error);
         } 
-    },
-    relatedProduct: async(req, res, next) => {
-        try{
-            const product_id = req.params.productId;
-            const productList = await ProductService.relatedProduct(product_id);
-            CommonHelper.sendSucess(res, 200, Message.RELATED_PRODUCT_LIST, productList);
-        }catch(error){
-            next(error);
-        }
     }
     
 }
 
-export default ProductController;
+export default BlogController;
