@@ -25,9 +25,7 @@ const ProductService = {
                         'type': type,
                         'table_name': "product"
                     });
-
                 }
-
                 resolve(product);
             } catch (error) {
                 reject(error);
@@ -77,7 +75,7 @@ const ProductService = {
                     }
                     resolve(product);
                 }
-                reject(new new CustomExceptionService(400, "Email already exist"));
+                reject(new CustomExceptionService(400, "Email already exist"));
             } catch (error) {
                 reject(error);
             }

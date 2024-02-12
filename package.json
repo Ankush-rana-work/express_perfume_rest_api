@@ -22,9 +22,11 @@
     "mysql2": "^3.2.0",
     "path": "^0.12.7",
     "sequelize": "^6.30.0",
+    "stripe": "^14.15.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
-    "url": "^0.11.3"
+    "url": "^0.11.3",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

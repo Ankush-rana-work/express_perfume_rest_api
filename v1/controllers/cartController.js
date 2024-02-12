@@ -1,7 +1,5 @@
 import Message from '../../local/message.js';
 import CommonHelper from '../../utils/commonHelper.js';
-import BlogService from '../service/blogService.js';
-import ProductService from '../service/productService.js';
 import CartService from '../service/cartService.js';
 
 const CartController = {

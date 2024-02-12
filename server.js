@@ -1,14 +1,17 @@
 import express from "express";
 import config from "./config/index.js";
 import Routes from "./v1/routes/index.js";
+import webhook from "./v1/routes/webhook.js";
 import db from "./models/index.js";
 import { swaggerUi, specs } from "./config/swaggerConfig.js";
-import fileUpload from "express-fileupload";
 import cors from 'cors';
-import multer from "multer";
+import path from "path";
 
 const app = express();
 const PORT = process.env.PORT || config.PORT;
+
+app.use('/api/v1/webhook', webhook);
+
 // parse requests of content-type - application/json
 app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
@@ -17,6 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
+
+// Specify the directory where your images are stored
+app.use('/uploads', express.static('uploads'))
 
 // verison one all routes
 app.use("/api/v1/", Routes);
