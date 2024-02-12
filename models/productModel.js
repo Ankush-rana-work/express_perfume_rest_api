@@ -52,6 +52,10 @@ const ProductModel = (sequelize, Sequelize) => {
         type: Sequelize.BIGINT,
         allowNull: true
       },
+      quantity:{
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
       type: {
         type: Sequelize.BIGINT,
         allowNull: true

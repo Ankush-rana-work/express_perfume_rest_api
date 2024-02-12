@@ -10,7 +10,7 @@ import fs from 'fs'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const { BlogModel, MediaModel, UserModel, sequelize, CartModel, ProductModel } = db;
+const { UserModel, CartModel, ProductModel } = db;
 
 const CartService = {
   create: (inputs) => {
@@ -19,7 +19,7 @@ const CartService = {
         let cartJson;
         const userId = inputs.user.user_id;
         let product = await ProductModel.findByPk(inputs.body.product_id);
-
+        console.log(product,'product');
         if (!product) {
           reject(new new CustomExceptionService(400, "Product not found "));
         }
@@ -35,10 +35,11 @@ const CartService = {
           cart = await CartModel.create({
             user_id: userId,
             product_id: inputs.body.product_id,
-            quantity: inputs.body.quantity
+            quantity: inputs.body.quantity ?? 1
           });
         } else {
-          cart.quantity = cart.quantity + inputs.body.quantity;
+          const updatedQuantity = !inputs.body.quantity ? cart.quantity + 1 : inputs.body.quantity;
+          cart.quantity = updatedQuantity
           cart.save();
         }
 
@@ -94,7 +95,7 @@ const CartService = {
             where: {
               is_active: 1
             }
-          },{
+          }, {
             model: ProductModel,
             as: 'product',
             attributes: {

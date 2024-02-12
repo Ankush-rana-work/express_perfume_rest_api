@@ -5,7 +5,7 @@ const CartSchema = {
     add: (req, res, next) => {
         const schema = Joi.object().keys({
             "product_id": Joi.number().integer().required(),
-            "quantity": Joi.number().integer().required(),
+            "quantity": Joi.number().integer(),
         });
 
         JoiHelper.validate(schema, req.body, res, next);

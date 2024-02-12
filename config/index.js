@@ -24,7 +24,12 @@ const dev = {
         SECRET: process.env.JWT_TOKEN_SECRET,
         REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET,
     },
-    HASH_SALT : 10
+    HASH_SALT : 10,
+    STRIPE:{
+        SECRETE_KEY: process.env.SECRETE_KEY,
+        SUCCCESS_REDIRECT_URL: process.env.SUCCCESS_REDIRECT_URL,
+        CANCEL_REDIRECT_URL: process.env.CANCEL_REDIRECT_URL,
+    }
 }
 
 const config = {dev};
