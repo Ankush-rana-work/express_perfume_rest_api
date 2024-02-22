@@ -10,8 +10,7 @@ const stripeInstance = Stripe(STRIPE.SECRETE_KEY);
 const { CartModel, UserModel, ProductModel, AttributeDataModel, MediaModel, OrderModel, OrderItemModel, sequelize } = db;
 
 const OrderService = {
-  checkoutSession: (inputs) => {
-    return new Promise(async function (resolve, reject) {
+  checkoutSession: async(inputs) => {
       const t = await sequelize.transaction();
       try {
 
@@ -23,7 +22,7 @@ const OrderService = {
         const cart = await OrderService.getCartInfo(userId);
 
         if (!cart) {
-          reject(new CustomExceptionService(400, "No item found in cart"));
+          throw new CustomExceptionService(400, "No item found in cart");
         }
 
         // Calculate the total amount by summing up the prices of each item in the car.
@@ -84,12 +83,11 @@ const OrderService = {
           await t.commit()
         }
 
-        resolve(session);
+        return session;
       } catch (error) {
         await t.rollback();
-        reject(error);
+        throw error;
       }
-    });
   },
   getCartInfo: async (userId) => {
     try {
