@@ -59,7 +59,7 @@ const UserController = {
  * tags:
  *   name: User
  *   description: The user managing API
- * /v1/user/login:
+ * /v1/users/login:
  *   post:
  *     summary: User Login
  *     tags: [User]
@@ -72,11 +72,11 @@ const UserController = {
 *                   email:
 *                       type: string
 *                       description: User email.
-*                       example: "xyz@gmail.com"
+*                       example: "ankush.rana@techaheadcorp.com"
 *                   password:
 *                       type: string,
 *                       description: User password,
-*                       example: "xyz@123456"
+*                       example: "tech@123"
 *     responses:
 *       '200' :
 *         description: success

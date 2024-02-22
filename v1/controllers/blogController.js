@@ -7,12 +7,12 @@ const BlogController = {
     /**
     * @swagger
     * tags:
-    *   name: Product
-    *   description: The product managing API
-    * /v1/product/create:
+    *   name: Blog
+    *   description: The blog managing API
+    * /v1/blog/create:
     *   post:
-    *     summary: Create new product
-    *     tags: [Product]
+    *     summary: Create new blog
+    *     tags: [Blog]
     *     requestBody:
     *       required: true
     *       content:
@@ -21,32 +21,16 @@ const BlogController = {
     *               properties:
     *                   title:
     *                       type: string
-    *                       description: product titel.
-    *                       example: "product"
-    *                   subtitle:
+    *                       description: blog title.
+    *                       example: "blog"
+    *                   description:
     *                       type: string
-    *                       description: Product sub title.
-    *                       example: "product subtitle"
-    *                   price:
+    *                       description: Blog sub title.
+    *                       example: "blog description"
+    *                   content:
     *                       type: string,
-    *                       description: Product price,
-    *                       example: 12.44
-    *                   item_country:
-    *                       type: string
-    *                       description: Product country.
-    *                       example: "ankush"
-    *                   handling_time:
-    *                       type: string
-    *                       description: Product handling time.
-    *                       example: "1-2 business days"
-    *                   upc:
-    *                       type: string,
-    *                       description: product upc,
-    *                       example: "hoobio12345"
-    *                   manufacturer_name:
-    *                       type: string,
-    *                       description: Product manufacturer name,
-    *                       example: "abc"
+    *                       description: Blog content,
+    *                       example: "content"
     *     responses:
     *       '200' :
     *         description: success
@@ -68,54 +52,19 @@ const BlogController = {
     /**
     * @swagger
     * tags:
-    *   name: Product
-    *   description: The product managing API
-    * /v1/product/edit/{id}:
+    *   name: Blog
+    *   description: The blog managing API
+    * /v1/blog/edit/{blog_id}:
     *   put:
-    *     summary: Edit product
-    *     tags: [Product]
+    *     summary: Edit Blog
+    *     tags: [Blog]
     *     parameters:
-    *       - in: query
-    *         name: id
+    *       - in: path
+    *         name: blog_id
     *         schema:
     *           type: string
-    *           description: Product id.
+    *           description: Blog id.
     *           example: 1
-    *     requestBody:
-    *       required: true
-    *       content:
-    *         application/json:
-    *           schema:
-    *               properties:
-
-    *                   title:
-    *                       type: string
-    *                       description: product titel.
-    *                       example: "product"
-    *                   subtitle:
-    *                       type: string
-    *                       description: Product sub title.
-    *                       example: "product subtitle"
-    *                   price:
-    *                       type: string,
-    *                       description: Product price,
-    *                       example: 12.44
-    *                   item_country:
-    *                       type: string
-    *                       description: Product country.
-    *                       example: "ankush"
-    *                   handling_time:
-    *                       type: string
-    *                       description: Product handling time.
-    *                       example: "1-2 business days"
-    *                   upc:
-    *                       type: string,
-    *                       description: product upc,
-    *                       example: "hoobio12345"
-    *                   manufacturer_name:
-    *                       type: string,
-    *                       description: Product manufacturer name,
-    *                       example: "abc"
     *     responses:
     *       '200' :
     *         description: success
@@ -134,15 +83,24 @@ const BlogController = {
             next(error);
         }
     },
+
+    show: async ( req, res, next ) => {
+        try{
+            const product = await ProductService.show(req.body);
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, product);
+        }catch(error){
+            next(error);
+        }
+    },
     /**
      * @swagger
      * tags:
-     *   name: Product
-     *   description: The product managing API
-     * /v1/product/show:
+     *   name: Blog
+     *   description: The blog managing API
+     * /v1/blog/list:
      *   get:
-     *     summary: Product list with search
-     *     tags: [Product]
+     *     summary: Blog list with search
+     *     tags: [Blog]
      *     parameters:
      *       - in: query
      *         name: per_page
@@ -170,51 +128,6 @@ const BlogController = {
      *       '400' :
      *         description: invalid data
      */
-    show: async ( req, res, next ) => {
-        try{
-            const product = await ProductService.show(req.body);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, product);
-        }catch(error){
-            next(error);
-        }
-    },
-    /**
-     * @swagger
-     * tags:
-     *   name: Product
-     *   description: The product managing API
-     * /v1/product/list:
-     *   get:
-     *     summary: Product listing
-     *     tags: [Product]
-     *     parameters:
-     *       - in: query
-     *         name: per_page
-     *         schema:
-     *           type: integer
-     *           description: Per page number.
-     *           example: 10
-     *       - in: query
-     *         name: page_no
-     *         schema:
-     *           type: integer
-     *           description: Page number.
-     *           example: 1
-     *       - in: query
-     *         name: type
-     *         schema:
-     *           type: string
-     *           description: attributes type.
-     *           enum: [brand, volume, shop_for, formulation]
-     *           example: ""
-     *     responses:
-     *       '200' :
-     *         description: success
-     *       '500' :
-     *         description: internal server error
-     *       '400' :
-     *         description: invalid data
-     */
     list: async(req, res, next) => {
         try{
             const blogList = await BlogService.getBlogList(req.query);
@@ -223,6 +136,31 @@ const BlogController = {
             next(error);
         }
     },
+    /**
+    * @swagger
+    * tags:
+    *   name: Blog
+    *   description: The blog delete API
+    * /v1/blog/delete/{blog_id}:
+    *   delete:
+    *     summary: Delete blog
+    *     tags: [Blog]
+    *     parameters:
+    *       - in: path
+    *         name: blog_id
+    *         schema:
+    *           type: string
+    *           description: Blog id.
+    *           example: 1
+    *     responses:
+    *       '200' :
+    *         description: success
+    *       '500' :
+    *         description: internal server error
+    *       '400' :
+    *         description: invalid data
+    *
+    */
     delete: async(req, res, next) => {
         try{
             const blogId = req.params.blogId;

@@ -20,32 +20,43 @@ const ProductController = {
     *               properties:
     *                   title:
     *                       type: string
-    *                       description: product titel.
     *                       example: "product"
     *                   subtitle:
     *                       type: string
-    *                       description: Product sub title.
     *                       example: "product subtitle"
     *                   price:
     *                       type: string,
-    *                       description: Product price,
     *                       example: 12.44
     *                   item_country:
     *                       type: string
-    *                       description: Product country.
     *                       example: "ankush"
     *                   handling_time:
     *                       type: string
-    *                       description: Product handling time.
     *                       example: "1-2 business days"
     *                   upc:
     *                       type: string,
-    *                       description: product upc,
     *                       example: "hoobio12345"
     *                   manufacturer_name:
     *                       type: string,
-    *                       description: Product manufacturer name,
     *                       example: "abc"
+    *                   brand:
+    *                       type: integer
+    *                       example: "14"
+    *                   volume:
+    *                       type: integer
+    *                       example: "25"
+    *                   type:
+    *                       type: integer
+    *                       example: "30"
+    *                   fragrance_name:
+    *                       type: integer
+    *                       example: "38"
+    *                   shop_for:
+    *                       type: integer
+    *                       example: "41"
+    *                   quantity:
+    *                       type: integer
+    *                       example: "100"
     *     responses:
     *       '200' :
     *         description: success
@@ -55,12 +66,12 @@ const ProductController = {
     *         description: invalid data
     *
     */
-    create: async ( req, res, next )=>{
-        try{
+    create: async (req, res, next) => {
+        try {
             console.log(req.body);
             const product = await ProductService.create(req);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_CREATE??'', null);
-        }catch(error){
+            CommonHelper.sendSucess(res, 200, Message.PRODUCT_CREATE ?? '', null);
+        } catch (error) {
             next(error);
         }
     },
@@ -74,7 +85,7 @@ const ProductController = {
     *     summary: Edit product
     *     tags: [Product]
     *     parameters:
-    *       - in: query
+    *       - in: path
     *         name: id
     *         schema:
     *           type: string
@@ -115,6 +126,24 @@ const ProductController = {
     *                       type: string,
     *                       description: Product manufacturer name,
     *                       example: "abc"
+    *                   brand:
+    *                       type: integer
+    *                       example: "14"
+    *                   volume:
+    *                       type: integer
+    *                       example: "25"
+    *                   type:
+    *                       type: integer
+    *                       example: "30"
+    *                   fragrance_name:
+    *                       type: integer
+    *                       example: "38"
+    *                   shop_for:
+    *                       type: integer
+    *                       example: "41"
+    *                   quantity:
+    *                       type: integer
+    *                       example: "100"
     *     responses:
     *       '200' :
     *         description: success
@@ -124,12 +153,12 @@ const ProductController = {
     *         description: invalid data
     *
     */
-    edit: async ( req, res, next )=>{
-        try{
+    edit: async (req, res, next) => {
+        try {
             const product_id = req.params.id;
             const product = await ProductService.update(req, product_id);
             CommonHelper.sendSucess(res, 200, Message.PRODUCT_UPDATED, product);
-        }catch(error){
+        } catch (error) {
             next(error);
         }
     },
@@ -169,123 +198,174 @@ const ProductController = {
      *       '400' :
      *         description: invalid data
      */
-    show: async ( req, res, next ) => {
-        try{
+    show: async (req, res, next) => {
+        try {
             const product = await ProductService.show(req.body);
             CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, product);
-        }catch(error){
+        } catch (error) {
             next(error);
         }
     },
-      /**
-     * @swagger
-     * tags:
-     *   name: Product
-     *   description: The product managing API
-     * /v1/product/attributes:
-     *   get:
-     *     summary: Product attributes list
-     *     tags: [Product]
-     *     parameters:
-     *       - in: query
-     *         name: per_page
-     *         schema:
-     *           type: integer
-     *           description: Per page number.
-     *           example: 10
-     *       - in: query
-     *         name: page_no
-     *         schema:
-     *           type: integer
-     *           description: Page number.
-     *           example: 1
-     *       - in: query
-     *         name: type
-     *         schema:
-     *           type: string
-     *           description: attributes type.
-     *           enum: [brand, volume, shop_for, formulation]
-     *           example: ""
-     *     responses:
-     *       '200' :
-     *         description: success
-     *       '500' :
-     *         description: internal server error
-     *       '400' :
-     *         description: invalid data
-     */
-    getAttributes: async (req, res, next)=>{
-        try{
+    /**
+   * @swagger
+   * tags:
+   *   name: Product
+   *   description: The product managing API
+   * /v1/product/attributes:
+   *   get:
+   *     summary: Product attributes list
+   *     tags: [Product]
+   *     parameters:
+   *       - in: query
+   *         name: per_page
+   *         schema:
+   *           type: integer
+   *           description: Per page number.
+   *           example: 10
+   *       - in: query
+   *         name: page_no
+   *         schema:
+   *           type: integer
+   *           description: Page number.
+   *           example: 1
+   *       - in: query
+   *         name: type
+   *         schema:
+   *           type: string
+   *           description: attributes type.
+   *           enum: [brand, volume, shop_for, formulation]
+   *           example: ""
+   *     responses:
+   *       '200' :
+   *         description: success
+   *       '500' :
+   *         description: internal server error
+   *       '400' :
+   *         description: invalid data
+   */
+    getAttributes: async (req, res, next) => {
+        try {
             const attribute_list = await ProductService.getAttributesList(req.query);
             CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, attribute_list);
-        }catch(error){
+        } catch (error) {
             next(error);
         }
     },
-          /**
-     * @swagger
-     * tags:
-     *   name: Product
-     *   description: The product managing API
-     * /v1/product/list:
-     *   get:
-     *     summary: Product listing
-     *     tags: [Product]
-     *     parameters:
-     *       - in: query
-     *         name: per_page
-     *         schema:
-     *           type: integer
-     *           description: Per page number.
-     *           example: 10
-     *       - in: query
-     *         name: page_no
-     *         schema:
-     *           type: integer
-     *           description: Page number.
-     *           example: 1
-     *       - in: query
-     *         name: type
-     *         schema:
-     *           type: string
-     *           description: attributes type.
-     *           enum: [brand, volume, shop_for, formulation]
-     *           example: ""
-     *     responses:
-     *       '200' :
-     *         description: success
-     *       '500' :
-     *         description: internal server error
-     *       '400' :
-     *         description: invalid data
-     */
-    list: async(req, res, next) => {
-        try{
+    /**
+* @swagger
+* tags:
+*   name: Product
+*   description: The product managing API
+* /v1/products/list:
+*   get:
+*     summary: Product listing
+*     tags: [Product]
+*     parameters:
+*       - in: query
+*         name: per_page
+*         schema:
+*           type: integer
+*           description: Per page number.
+*           example: 10
+*       - in: query
+*         name: page_no
+*         schema:
+*           type: integer
+*           description: Page number.
+*           example: 1
+*       - in: query
+*         name: type
+*         schema:
+*           type: string
+*           description: attributes type.
+*           enum: [brand, volume, shop_for, formulation]
+*           example: ""
+*     responses:
+*       '200' :
+*         description: success
+*       '500' :
+*         description: internal server error
+*       '400' :
+*         description: invalid data
+*/
+    list: async (req, res, next) => {
+        try {
             const attribute_list = await ProductService.getProductList(req.query);
             CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, attribute_list);
-        }catch(error){
+        } catch (error) {
             next(error);
         }
     },
-    delete: async(req, res, next) => {
-        try{
+
+
+        /**
+    * @swagger
+    * tags:
+    *   name: Product
+    *   description: The product delete API
+    * /v1/products/delete/{product_id}:
+    *   delete:
+    *     summary: Delete product
+    *     tags: [Product]
+    *     parameters:
+    *       - in: path
+    *         name: product_id
+    *         schema:
+    *           type: string
+    *           description: Product id.
+    *           example: 1
+    *     responses:
+    *       '200' :
+    *         description: success
+    *       '500' :
+    *         description: internal server error
+    *       '400' :
+    *         description: invalid data
+    *
+    */
+    delete: async (req, res, next) => {
+        try {
             const product_id = req.params.id;
             await ProductService.deleteProduct(product_id);
             CommonHelper.sendSucess(res, 200, Message.PRODUCT_DELETE, null);
-        }catch(error){
+        } catch (error) {
             next(error);
-        } 
+        }
     },
-    relatedProduct: async(req, res, next) => {
-        try{
+        /**
+     * @swagger
+     * tags:
+     *   name: Product
+     *   description: The product managing API
+     * /v1/products/related-product/{product_id}:
+     *   get:
+     *     summary: Product list with search
+     *     tags: [Product]
+     *     parameters:
+     *       - in: path
+     *         name: product_id
+     *         schema:
+     *           type: integer
+     *           description: Per page number.
+     *           example: 1
+     *     responses:
+     *       '200' :
+     *         description: success
+     *       '500' :
+     *         description: internal server error
+     *       '400' :
+     *         description: invalid data
+     */
+    relatedProduct: async (req, res, next) => {
+        try {
             const product_id = req.params.productId;
             const productList = await ProductService.relatedProduct(product_id);
             CommonHelper.sendSucess(res, 200, Message.RELATED_PRODUCT_LIST, productList);
-        }catch(error){
+        } catch (error) {
             next(error);
         }
     }
-    
+
 }
 
 export default ProductController;
