@@ -17,7 +17,7 @@ const dev = {
         idle: 0
     },
     BASE_URL: process.env.LOCAL_BASE_URL,
-    PORT:3000,
+    PORT:4000,
     JWT: {
         TOKEN_LIFE: 30 * 24 * 60 * 60, // Note: in seconds!,(day*hour*min*sec)
         REFRESH_TOKEN_LIFE: 30 * 24 * 60 * 60, // Note: in seconds!, (day*hour*min*sec)
