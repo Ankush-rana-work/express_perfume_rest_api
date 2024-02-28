@@ -4,9 +4,11 @@ import productRoutes from './productRoutes.js';
 import blogRoute from './blogRoutes.js';
 import cartRoute from '../routes/cartRoutes.js';
 import orderRoutes from '../routes/orderRoutes.js';
+import categoryRoutes from '../routes/categoryRoutes.js';
 
 const router = Router();
 router.use('/users', userRoutes);
+router.use('/category', categoryRoutes);
 router.use('/products', productRoutes);
 router.use('/blog', blogRoute);
 router.use('/cart', cartRoute);

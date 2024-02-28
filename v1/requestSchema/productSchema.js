@@ -17,6 +17,7 @@ const ProductSchema = {
             "type"          : Joi.number().required(),
             "quantity"      : Joi.number().required(),
             "fragrance_name": Joi.number().required(),
+            "category_id"   : Joi.number().required(),
             "shop_for"      : Joi.number().required()
         });
                 

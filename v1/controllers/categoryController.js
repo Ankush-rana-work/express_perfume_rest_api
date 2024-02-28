@@ -4,7 +4,7 @@ import BlogService from '../service/blogService.js';
 import CategoryService from '../service/categoryService.js';
 import ProductService from '../service/productService.js';
 
-const BlogController = {
+const CategoryController = {
     /**
     * @swagger
     * tags:
@@ -44,8 +44,8 @@ const BlogController = {
     create: async ( req, res, next )=>{
         try{
             console.log(req.body);
-            const blog = await CategoryService.create(req);
-            CommonHelper.sendSucess(res, 200, Message.BLOG_CREATE??'', null);
+            const category = await CategoryService.create(req);
+            CommonHelper.sendSucess(res, 200, Message.CATEGORY_CREATE??'', null);
         }catch(error){
             next(error);
         }
@@ -77,9 +77,9 @@ const BlogController = {
     */
     edit: async ( req, res, next )=>{
         try{
-            const blogId = req.params.blogId;
-            const blog = await BlogService.update(req, blogId);
-            CommonHelper.sendSucess(res, 200, Message.BLOG_UPDATED, blog);
+            const categoryId = req.params.categoryId;
+            const category = await CategoryService.update(req, categoryId);
+            CommonHelper.sendSucess(res, 200, Message.CATEGORY_UPDATED, category);
         }catch(error){
             next(error);
         }
@@ -88,7 +88,7 @@ const BlogController = {
     show: async ( req, res, next ) => {
         try{
             const product = await ProductService.show(req.body);
-            CommonHelper.sendSucess(res, 200, Message.PRODUCT_LIST, product);
+            CommonHelper.sendSucess(res, 200, Message.CATEGORY_LIST, product);
         }catch(error){
             next(error);
         }
@@ -126,13 +126,13 @@ const BlogController = {
      *         description: success
      *       '500' :
      *         description: internal server error
-     *       '400' :
+     *       '400' :getBlogList
      *         description: invalid data
      */
     list: async(req, res, next) => {
         try{
-            const blogList = await BlogService.getBlogList(req.query);
-            CommonHelper.sendSucess(res, 200, Message.BLOG_LIST, blogList);
+            const getList = await CategoryService.getList(req.query);
+            CommonHelper.sendSucess(res, 200, Message.CATEGORY_LIST, getList);
         }catch(error){
             next(error);
         }
@@ -164,9 +164,9 @@ const BlogController = {
     */
     delete: async(req, res, next) => {
         try{
-            const blogId = req.params.blogId;
-            await BlogService.deleteBlog(blogId);
-            CommonHelper.sendSucess(res, 200, Message.BLOG_DELETE, null);
+            const categoryId = req.params.categoryId;
+            await CategoryService.deleteBlog(categoryId);
+            CommonHelper.sendSucess(res, 200, Message.CATEGORY_DELETE, null);
         }catch(error){
             next(error);
         } 
@@ -174,4 +174,4 @@ const BlogController = {
     
 }
 
-export default BlogController;
+export default CategoryController;

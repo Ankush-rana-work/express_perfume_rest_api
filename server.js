@@ -11,7 +11,6 @@ const app = express();
 const PORT = process.env.PORT || config.PORT;
 
 app.use('/api/v1/webhook', webhook);
-
 // parse requests of content-type - application/json
 app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
@@ -20,10 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
-
 // Specify the directory where your images are stored
 app.use('/uploads', express.static('uploads'))
-
 // verison one all routes
 app.use("/api/v1/", Routes);
 
