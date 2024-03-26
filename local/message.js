@@ -27,6 +27,11 @@ const Message = {
         CATEGORY_UPDATED: "Blog updated successfully",
         CATEGORY_LIST: "Blog List",
         CATEGORY_DELETE: "Blog deleted successfully",
+        // REVIEW MESSAGE
+        REVIEW_CREATE: "Review created successfully",
+        REVIEW_UPDATED: "Review updated successfully",
+        REVIEW_LIST: "Review List",
+        REVIEW_DELETE: "Review deleted successfully",
     }
 }
 

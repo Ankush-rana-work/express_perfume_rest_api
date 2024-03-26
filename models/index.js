@@ -11,6 +11,8 @@ import CartModel from "./cartModel.js";
 import OrderItemModel from "./orderItem.js";
 import OrderModel from "./order.js";
 import CategoryModel from "./categoryModel.js";
+import ProductReviewModel from "./productReviewModel.js";
+import ReviewFeedbackModel from "./ReviewFeedbackModel.js";
 
 const { DB_HOST, DB_USER, DB_PASS, DB_NAME, DIALECT, POOL } = config;
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
@@ -41,7 +43,8 @@ db.BlogModel = BlogModel(sequelize, Sequelize);
 db.CartModel = CartModel(sequelize, Sequelize);
 db.OrderModel = OrderModel(sequelize, Sequelize);
 db.OrderItemModel = OrderItemModel(sequelize, Sequelize);
-
+db.ProductReviewModel = ProductReviewModel(sequelize, Sequelize);
+db.ReviewFeedbackModel = ReviewFeedbackModel(sequelize, Sequelize);
 
 //relationships belongs to
 db.UserModel.belongsTo(db.RoleModel, { as: 'user_role', foreignKey: 'role_id' });
@@ -56,6 +59,10 @@ db.BlogModel.belongsTo(db.UserModel, { as: 'user', foreignKey: 'user_id' });
 db.CartModel.belongsTo(db.UserModel, { as: 'user', foreignKey: 'user_id' });
 db.CartModel.belongsTo(db.ProductModel, { as: 'product', foreignKey: 'product_id' });
 db.AttributeDataModel.belongsTo(db.AttributeModel, { as: 'attr_name', foreignKey: 'attribute_id' });
+db.ProductReviewModel.belongsTo(db.ProductModel, { as: 'product', foreignKey: 'product_id' });
+db.ProductReviewModel.belongsTo(db.UserModel, { as: 'user', foreignKey: 'user_id' });
+db.ReviewFeedbackModel.belongsTo(db.UserModel, { as: 'user', foreignKey: 'user_id' });
+db.ReviewFeedbackModel.belongsTo(db.ProductReviewModel, { as: 'review', foreignKey: 'review_id' });
 
 // relationships has many 
 db.ProductModel.hasMany(db.MediaModel, { as: 'product_media', foreignKey: 'table_id', scope: {
@@ -63,7 +70,18 @@ db.ProductModel.hasMany(db.MediaModel, { as: 'product_media', foreignKey: 'table
 }});
 db.AttributeModel.hasMany(db.AttributeDataModel, { as: 'attribute_data', foreignKey: 'attribute_id' });
 db.BlogModel.hasMany(db.MediaModel, { as: 'blog_meda', foreignKey: 'table_id' });
-
+db.CategoryModel.hasMany(db.MediaModel, { as: 'category_media', foreignKey: 'table_id', scope: {
+  table_name: 'category',
+}});
+db.ProductReviewModel.hasMany(db.MediaModel, { as: 'review_media', foreignKey: 'table_id', scope: {
+  table_name: 'product_review',
+}});
+db.ProductReviewModel.hasMany(db.ReviewFeedbackModel, { as: 'favourite', foreignKey: 'review_id', scope: {
+  type: 'likes',
+}});
+db.ProductReviewModel.hasMany(db.ReviewFeedbackModel, { as: 'helpful', foreignKey: 'review_id', scope: {
+  type: 'helpful',
+}});
 // relationship has one
 
 
