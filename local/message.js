@@ -1,7 +1,7 @@
 const Message = {
-    en:{
+    en: {
         // USER MESSAGES
-        USER_LIST : "User List",
+        USER_LIST: "User List",
         USER_EXIST: "User already exists",
         USER_CREATED: "User created successfully",
         USER_FAILED: "Fail to created user",
@@ -22,6 +22,11 @@ const Message = {
         CART_UPDATED: "Cart updated successfully",
         CART_LIST: "Cart List",
         CART_DELETE: "Cart deleted successfully",
+        // BLOG MESSAGE
+        CATEGORY_CREATE: "Blog created successfully",
+        CATEGORY_UPDATED: "Blog updated successfully",
+        CATEGORY_LIST: "Blog List",
+        CATEGORY_DELETE: "Blog deleted successfully",
     }
 }
 

@@ -60,6 +60,16 @@ const ProductModel = (sequelize, Sequelize) => {
         type: Sequelize.BIGINT,
         allowNull: true
       },
+      new_arrival:{
+        type: Sequelize.ENUM('true', 'false'),
+        allowNull: false,
+        defaultValue: 'false',
+      },
+      category_id:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       is_active: {
         type: Sequelize.TINYINT,
         allowNull: false,
@@ -73,7 +83,6 @@ const ProductModel = (sequelize, Sequelize) => {
     }, {
         tableName: 'tbl_product'
     });
-  
     return Product;
   };
 

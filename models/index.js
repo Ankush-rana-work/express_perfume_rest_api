@@ -10,6 +10,7 @@ import BlogModel from "./blogModel.js";
 import CartModel from "./cartModel.js";
 import OrderItemModel from "./orderItem.js";
 import OrderModel from "./order.js";
+import CategoryModel from "./categoryModel.js";
 
 const { DB_HOST, DB_USER, DB_PASS, DB_NAME, DIALECT, POOL } = config;
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
@@ -32,6 +33,7 @@ db.sequelize = sequelize;
 db.RoleModel = RoleModel(sequelize, Sequelize);
 db.UserModel = UserModel(sequelize, Sequelize);
 db.MediaModel = MediaModel(sequelize, Sequelize);
+db.CategoryModel = CategoryModel(sequelize, Sequelize);
 db.ProductModel = ProductModel(sequelize, Sequelize);
 db.AttributeModel = AttributeModel(sequelize, Sequelize);
 db.AttributeDataModel = AttributeDataModel(sequelize, Sequelize);
@@ -39,6 +41,7 @@ db.BlogModel = BlogModel(sequelize, Sequelize);
 db.CartModel = CartModel(sequelize, Sequelize);
 db.OrderModel = OrderModel(sequelize, Sequelize);
 db.OrderItemModel = OrderItemModel(sequelize, Sequelize);
+
 
 //relationships belongs to
 db.UserModel.belongsTo(db.RoleModel, { as: 'user_role', foreignKey: 'role_id' });
@@ -48,6 +51,7 @@ db.ProductModel.belongsTo(db.AttributeDataModel, { as: 'attr_volume', foreignKey
 db.ProductModel.belongsTo(db.AttributeDataModel, { as: 'attr_shop_for', foreignKey: 'shop_for' });
 db.ProductModel.belongsTo(db.AttributeDataModel, { as: 'attr_fragrancename', foreignKey: 'fragrance_name' });
 db.ProductModel.belongsTo(db.AttributeDataModel, { as: 'attr_type', foreignKey: 'type' });
+db.ProductModel.belongsTo(db.CategoryModel, { as: 'category', foreignKey: 'category_id' });
 db.BlogModel.belongsTo(db.UserModel, { as: 'user', foreignKey: 'user_id' });
 db.CartModel.belongsTo(db.UserModel, { as: 'user', foreignKey: 'user_id' });
 db.CartModel.belongsTo(db.ProductModel, { as: 'product', foreignKey: 'product_id' });
